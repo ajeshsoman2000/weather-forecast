@@ -7,7 +7,7 @@ import com.example.weatherforecast.repository.service.WeatherForecastService
 
 class WeatherRepository() {
 
-    fun getWeatherForecast(city: String, listener: UpdateUIListener) {
-        WeatherForecastService().fetch(city, listener)
+    fun getWeatherForecast(city: String, listener: UpdateUIListener): LiveData<WeatherModel> {
+        return WeatherForecastService().fetch(city, listener)
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -24,14 +25,27 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    var weatherDetail: MutableLiveData<WeatherModel>? = null
+    var weatherDetail: LiveData<WeatherModel>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activityMainBinding = DataBindingUtil.setContentView<ActivityMainBinding>(this@MainActivity,
             R.layout.activity_main)
-        activityMainBinding.viewModel = ViewModelProviders.of(this@MainActivity, ViewModelFactory()).
-            get(MainViewModel::class.java)
+
+        activityMainBinding.viewModel =
+                    ViewModelProviders.of(this@MainActivity, ViewModelFactory()).get(MainViewModel::class.java)
+
+
+        rv_weather_forecast.layoutManager = LinearLayoutManager(this@MainActivity)
+        rv_weather_forecast.itemAnimator = DefaultItemAnimator()
+
+        if ((activityMainBinding as ActivityMainBinding).viewModel?.weatherDetail != null ) {
+            rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
+                this@MainActivity,
+                activityMainBinding.viewModel?.weatherDetail?.value?.forecast?.forecastday!!
+            )
+        }
+
 
         btn_forecast.setOnClickListener {
             if(this@MainActivity.isNetworkConnectionAvailable()) {
@@ -58,15 +72,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setObserver(){
-        (weatherDetail as MutableLiveData<WeatherModel>).observe(this@MainActivity, object : Observer<WeatherModel> {
-            override fun onChanged(t: WeatherModel?) {
-                rv_weather_forecast.layoutManager = LinearLayoutManager(this@MainActivity)
-                rv_weather_forecast.itemAnimator = DefaultItemAnimator()
+        (weatherDetail as LiveData<WeatherModel>).observe(this@MainActivity,
+            Observer<WeatherModel> { t ->
                 rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(this@MainActivity,
                     t?.forecast?.forecastday as List<Forecast>)
-
-            }
-
-        })
+            })
     }
 }
