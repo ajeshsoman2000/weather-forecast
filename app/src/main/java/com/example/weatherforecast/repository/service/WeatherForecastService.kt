@@ -2,6 +2,7 @@ package com.example.weatherforecast.repository.service
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.weatherforecast.UpdateUIListener
 import com.example.weatherforecast.model.WeatherModel
 import com.example.weatherforecast.repository.WeatherDetails
 import com.google.gson.Gson
@@ -21,12 +22,15 @@ import okhttp3.OkHttpClient
 
 class WeatherForecastService: Callback<WeatherModel> {
     private val BASE_URL = "https://api.apixu.com"
+    private lateinit var updateUIListener: UpdateUIListener
 
     override fun onFailure(call: Call<WeatherModel>, t: Throwable) {
         Log.v("WeatherForecastService", "onfailure => ${t.message}")
+        updateUIListener.stopProgressbar()
     }
 
     override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
+        updateUIListener.stopProgressbar()
         if (response.isSuccessful) {
             Log.v("WeatherForecastService", "onResponse :: isSuccessful => ${response.body()}")
             WeatherDetails.weatherDetail.value = response.body()
@@ -35,9 +39,9 @@ class WeatherForecastService: Callback<WeatherModel> {
         }
     }
 
-    fun fetch(city: String) {
+    fun fetch(city: String, listener: UpdateUIListener) {
         Log.v("Forecast", "for city :: $city")
-
+        updateUIListener = listener
         val okHttpClient = OkHttpClient.Builder().addInterceptor(object : Interceptor {
             override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
                 val originalRequest = chain.request()
