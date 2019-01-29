@@ -10,10 +10,13 @@ class MainViewModel: ViewModel() {
 
     var weatherDetail: LiveData<WeatherModel>? = null
 
-    fun getWeatherForecast(city: String, listener: UpdateUIListener): LiveData<WeatherModel> {
-        weatherDetail = WeatherRepository().getWeatherForecast(city, listener)
-        return weatherDetail as LiveData<WeatherModel>
-//        return WeatherDetails.weatherDetail
+    fun getWeatherForecast(city: String, listener: UpdateUIListener): LiveData<WeatherModel>? {
+        return if (city.isNotEmpty()) {
+            weatherDetail = WeatherRepository().getWeatherForecast(city, listener)
+            weatherDetail as LiveData<WeatherModel>
+        } else {
+            null
+        }
     }
 
 
