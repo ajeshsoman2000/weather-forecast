@@ -42,10 +42,13 @@ class MainActivity : AppCompatActivity() {
         rv_weather_forecast.itemAnimator = DefaultItemAnimator()
 
         if (activityMainBinding.viewModel?.weatherDetail != null ) {
-            rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
-                this@MainActivity,
-                activityMainBinding.viewModel?.weatherDetail?.value?.forecast?.forecastday!!
-            )
+
+            activityMainBinding.viewModel?.weatherDetail?.value?.forecast?.forecastday?.let {
+                rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
+                    this@MainActivity,
+                        it
+                    )
+            }
         }
 
 
