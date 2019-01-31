@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,10 +27,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     var weatherDetail: LiveData<WeatherModel>? = null
+    lateinit var activityMainBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val activityMainBinding = DataBindingUtil.setContentView<ActivityMainBinding>(this@MainActivity,
+        activityMainBinding = DataBindingUtil.setContentView(this@MainActivity,
             R.layout.activity_main)
 
         activityMainBinding.viewModel =
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         rv_weather_forecast.layoutManager = LinearLayoutManager(this@MainActivity)
         rv_weather_forecast.itemAnimator = DefaultItemAnimator()
 
-        if ((activityMainBinding as ActivityMainBinding).viewModel?.weatherDetail != null ) {
+        if (activityMainBinding.viewModel?.weatherDetail != null ) {
             rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
                 this@MainActivity,
                 activityMainBinding.viewModel?.weatherDetail?.value?.forecast?.forecastday!!
@@ -47,17 +49,17 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        btn_forecast.setOnClickListener {
+        tv_get_forecast.setOnClickListener {
             if(this@MainActivity.isNetworkConnectionAvailable()) {
                 if (et_city.text.toString().trim().isNotEmpty()) {
                     pb_fetch_forecast.visibility = View.VISIBLE
-                    btn_forecast.isEnabled = false
+                    tv_get_forecast.isEnabled = false
                     weatherDetail =
                             (activityMainBinding.viewModel as MainViewModel).getWeatherForecast(et_city.text.toString(),
                                 object : UpdateUIListener {
                                     override fun stopProgressbar() {
                                         pb_fetch_forecast.visibility = View.GONE
-                                        btn_forecast.isEnabled = true
+                                        tv_get_forecast.isEnabled = true
                                     }
 
                                 })
@@ -77,5 +79,14 @@ class MainActivity : AppCompatActivity() {
                 rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(this@MainActivity,
                     t?.forecast?.forecastday as List<Forecast>)
             })
+    }
+
+    override fun onBackPressed() {
+        if (fl_fragment_parent.isVisible) {
+            fl_fragment_parent.visibility = View.GONE
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

@@ -10,7 +10,10 @@ import com.example.weatherforecast.R
 import com.example.weatherforecast.model.Forecast
 import android.view.LayoutInflater
 import com.example.weatherforecast.utils.changeDateFormat
+import com.example.weatherforecast.view.MainActivity
+import com.example.weatherforecast.view.WeatherDetailFragment
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class WeatherForecastRecyclerViewAdapter(val context: Context, val weatherForecastList: List<Forecast>): RecyclerView.Adapter<WeatherForecastItemViewHolder>() {
@@ -31,6 +34,14 @@ class WeatherForecastRecyclerViewAdapter(val context: Context, val weatherForeca
         holder.tvMinTemp.text = "Min: ${forecast.day.mintemp_c}\u2103"
         holder.tvCondition.text = forecast.day.condition.text
         Picasso.with(context).load("https:${forecast.day.condition.icon}").into(holder.ivCondtion)
+        holder.itemView.setOnClickListener {
+            (context as MainActivity).apply {
+                activityMainBinding.viewModel?.selectedForecast = forecast
+                activityMainBinding.flFragmentParent.visibility = View.VISIBLE
+                supportFragmentManager.beginTransaction().addToBackStack(null).add(R.id.fl_fragment_parent,
+                    WeatherDetailFragment()).commit()
+            }
+        }
     }
 }
 
