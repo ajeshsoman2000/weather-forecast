@@ -60,9 +60,6 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
-        tv_get_forecast.setOnClickListener {
-            fetchForecast()
-        }
     }
 
     fun setObserver(){
@@ -85,13 +82,11 @@ class MainActivity : AppCompatActivity() {
         if(this@MainActivity.isNetworkConnectionAvailable()) {
             if (et_city.text.toString().trim().isNotEmpty()) {
                 pb_fetch_forecast.visibility = View.VISIBLE
-                tv_get_forecast.isEnabled = false
                 weatherDetail =
                         (activityMainBinding.viewModel as MainViewModel).getWeatherForecast(et_city.text.toString(),
                             object : UpdateUIListener {
                                 override fun stopProgressbar() {
                                     pb_fetch_forecast.visibility = View.GONE
-                                    tv_get_forecast.isEnabled = true
                                 }
 
                                 override fun notifyError(message: String) {
