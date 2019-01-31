@@ -28,6 +28,9 @@ class WeatherForecastService: Callback<WeatherModel> {
     override fun onFailure(call: Call<WeatherModel>, t: Throwable) {
         Log.v("WeatherForecastService", "onfailure => ${t.message}")
         updateUIListener.stopProgressbar()
+        t.message?.let {
+            updateUIListener.notifyError(it)
+        }
     }
 
     override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
@@ -36,6 +39,7 @@ class WeatherForecastService: Callback<WeatherModel> {
             Log.v("WeatherForecastService", "onResponse :: isSuccessful => ${response.body()}")
             weatherMutableLiveData.value = response.body()
         } else {
+            updateUIListener.notifyError(response.message())
             Log.v("WeatherForecastService", "onResponse :: isNotSuccessful :: message => ${response.message()} and error code :: ${response.code()}")
         }
     }

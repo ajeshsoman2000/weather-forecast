@@ -62,6 +62,9 @@ class MainActivity : AppCompatActivity() {
                                         tv_get_forecast.isEnabled = true
                                     }
 
+                                    override fun notifyError(message: String) {
+                                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+                                    }
                                 })
                     setObserver()
                 } else {
