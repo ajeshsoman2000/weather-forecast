@@ -60,6 +60,8 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
+        tv_get_forecast.setOnClickListener { fetchForecast() }
+
     }
 
     fun setObserver(){
