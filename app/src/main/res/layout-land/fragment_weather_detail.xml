@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".view.WeatherDetailFragment"
+            android:background="@android:color/white"
+            android:clickable="true"
+            android:focusable="true">
+
+        <TextView android:id="@+id/tv_day"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:textSize="20sp"
+                  app:layout_constraintTop_toTopOf="parent"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toRightOf="parent"
+                  android:layout_marginTop="20dp"
+                  android:layout_marginLeft="8dp"
+                  android:layout_marginRight="8dp"
+                  android:gravity="center"/>
+
+        <ImageView android:id="@+id/iv_condition"
+                   android:layout_width="75dp" android:layout_height="75dp"
+                   android:layout_marginTop="8dp"
+                   app:layout_constraintTop_toBottomOf="@id/tv_day" app:layout_constraintStart_toStartOf="parent"
+                   android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                   android:layout_marginEnd="8dp"/>
+
+        <TextView android:id="@+id/tv_condition"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/iv_condition"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toRightOf="parent"
+                  android:layout_marginTop="16dp"
+                  android:layout_marginLeft="8dp"
+                  android:layout_marginRight="8dp"
+                  android:gravity="center"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"/>
+
+        <TextView android:id="@+id/tv_lbl_temp" android:layout_width="0dp" android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_condition"
+                  android:layout_marginTop="8dp"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toRightOf="parent"
+                  android:text="Temperatures"
+                  android:gravity="center"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"/>
+
+        <TextView android:id="@+id/tv_max_temp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_lbl_temp"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  android:layout_marginTop="8dp"
+                  app:layout_constraintRight_toLeftOf="@id/iv_condition"
+                  android:gravity="center"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"/>
+
+        <TextView android:id="@+id/tv_min_temp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content" tools:layout_editor_absoluteY="177dp"
+                  tools:layout_editor_absoluteX="290dp"
+                  app:layout_constraintTop_toBottomOf="@id/tv_lbl_temp"
+                  app:layout_constraintRight_toRightOf="parent"
+                  android:layout_marginTop="8dp"
+                  app:layout_constraintLeft_toRightOf="@id/iv_condition"
+                  android:gravity="center"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"/>
+
+        <TextView android:id="@+id/tv_lbl_windspeed"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_max_temp"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toLeftOf="@id/iv_condition"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:text="Wind Speed: "
+                  android:layout_marginTop="32dp"/>
+
+        <TextView android:id="@+id/tv_windspeed"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_min_temp"
+                  app:layout_constraintLeft_toRightOf="@id/tv_lbl_windspeed"
+                  android:layout_marginLeft="8dp"
+                  android:gravity="left"
+                  app:layout_constraintRight_toRightOf="parent"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:layout_marginTop="32dp"/>
+
+        <TextView android:id="@+id/tv_lbl_visibility"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_lbl_windspeed"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toLeftOf="@id/iv_condition"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:text="Visibility: "
+                  android:layout_marginTop="8dp"/>
+
+        <TextView android:id="@+id/tv_visibility"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_windspeed"
+                  app:layout_constraintLeft_toRightOf="@id/tv_lbl_visibility"
+                  android:layout_marginLeft="8dp"
+                  android:gravity="left"
+                  app:layout_constraintRight_toRightOf="parent"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:layout_marginTop="8dp"/>
+
+        <TextView android:id="@+id/tv_lbl_humidity"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_lbl_visibility"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toLeftOf="@id/iv_condition"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:text="Humidity: "
+                  android:layout_marginTop="8dp"/>
+
+        <TextView android:id="@+id/tv_humidity"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/tv_visibility"
+                  app:layout_constraintLeft_toRightOf="@id/tv_lbl_humidity"
+                  android:layout_marginLeft="8dp"
+                  android:gravity="left"
+                  app:layout_constraintRight_toRightOf="parent"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:layout_marginTop="8dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

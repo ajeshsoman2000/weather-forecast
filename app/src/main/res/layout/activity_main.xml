@@ -21,7 +21,7 @@
                                                                app:layout_constraintTop_toTopOf="parent"
         >
             <EditText android:id="@+id/et_city"
-                      android:layout_width="142dp"
+                      android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:hint="Enter city"
                       android:text="Chennai"/>
@@ -63,9 +63,7 @@
 
         <FrameLayout android:id="@+id/fl_fragment_parent"
                      android:layout_width="match_parent" android:layout_height="match_parent"
-                     android:clickable="true"
-                     android:focusable="true"
-                     android:visibility="gone"/>
+                     android:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

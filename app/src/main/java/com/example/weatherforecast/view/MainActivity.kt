@@ -82,8 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (fl_fragment_parent.isVisible) {
-            fl_fragment_parent.visibility = View.GONE
+        if (supportFragmentManager.backStackEntryCount > 0) {
             supportFragmentManager.popBackStack()
         } else {
             super.onBackPressed()
