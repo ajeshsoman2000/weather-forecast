@@ -1,14 +1,14 @@
 package com.example.weatherforecast.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -23,6 +23,7 @@ import com.example.weatherforecast.view.adapters.WeatherForecastRecyclerViewAdap
 import com.example.weatherforecast.viewmodel.MainViewModel
 import com.example.weatherforecast.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,31 +52,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        et_city.setOnEditorActionListener { view, actionId, event ->
+            if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) ||
+                (actionId == EditorInfo.IME_ACTION_DONE)) {
+                fetchForecast()
+            }
+            false
+        }
 
         tv_get_forecast.setOnClickListener {
-            if(this@MainActivity.isNetworkConnectionAvailable()) {
-                if (et_city.text.toString().trim().isNotEmpty()) {
-                    pb_fetch_forecast.visibility = View.VISIBLE
-                    tv_get_forecast.isEnabled = false
-                    weatherDetail =
-                            (activityMainBinding.viewModel as MainViewModel).getWeatherForecast(et_city.text.toString(),
-                                object : UpdateUIListener {
-                                    override fun stopProgressbar() {
-                                        pb_fetch_forecast.visibility = View.GONE
-                                        tv_get_forecast.isEnabled = true
-                                    }
-
-                                    override fun notifyError(message: String) {
-                                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-                                    }
-                                })
-                    setObserver()
-                } else {
-                    Toast.makeText(this@MainActivity, "Please enter a city.", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this@MainActivity, "Please ensure network connectivity.", Toast.LENGTH_SHORT).show()
-            }
+            fetchForecast()
         }
     }
 
@@ -92,6 +78,32 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.popBackStack()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun fetchForecast() {
+        if(this@MainActivity.isNetworkConnectionAvailable()) {
+            if (et_city.text.toString().trim().isNotEmpty()) {
+                pb_fetch_forecast.visibility = View.VISIBLE
+                tv_get_forecast.isEnabled = false
+                weatherDetail =
+                        (activityMainBinding.viewModel as MainViewModel).getWeatherForecast(et_city.text.toString(),
+                            object : UpdateUIListener {
+                                override fun stopProgressbar() {
+                                    pb_fetch_forecast.visibility = View.GONE
+                                    tv_get_forecast.isEnabled = true
+                                }
+
+                                override fun notifyError(message: String) {
+                                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+                                }
+                            })
+                setObserver()
+            } else {
+                Toast.makeText(this@MainActivity, "Please enter a city.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this@MainActivity, "Please ensure network connectivity.", Toast.LENGTH_SHORT).show()
         }
     }
 }
