@@ -1,33 +1,38 @@
 package com.example.weatherforecast.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforecast.R
-import com.example.weatherforecast.UpdateUIListener
 import com.example.weatherforecast.databinding.ActivityMainBinding
-import com.example.weatherforecast.model.Forecast
 import com.example.weatherforecast.model.WeatherModel
+import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.utils.isNetworkConnectionAvailable
 import com.example.weatherforecast.view.adapters.WeatherForecastRecyclerViewAdapter
 import com.example.weatherforecast.viewmodel.MainViewModel
 import com.example.weatherforecast.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class MainActivity : AppCompatActivity() {
 
-    var weatherDetail: LiveData<WeatherModel>? = null
+    var weatherDetail: LiveData<WeatherResponse>? = null
     lateinit var activityMainBinding: ActivityMainBinding
+    private val backgroundScope = CoroutineScope(Dispatchers.IO)
+    private val mainScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,47 +48,50 @@ class MainActivity : AppCompatActivity() {
 
         if (activityMainBinding.viewModel?.weatherDetail != null ) {
 
-            activityMainBinding.viewModel?.weatherDetail?.value?.forecast?.forecastday?.let {
-                rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
-                    this@MainActivity,
+            if (activityMainBinding.viewModel?.weatherDetail?.value is WeatherResponse.Success) {
+                (activityMainBinding.viewModel?.weatherDetail?.value as WeatherResponse.Success).result.forecast.
+                    forecastday.let {
+                    rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
+                        this@MainActivity,
                         it
                     )
-            }
-        }
-
-
-        tv_get_forecast.setOnClickListener {
-            if(this@MainActivity.isNetworkConnectionAvailable()) {
-                if (et_city.text.toString().trim().isNotEmpty()) {
-                    pb_fetch_forecast.visibility = View.VISIBLE
-                    tv_get_forecast.isEnabled = false
-                    weatherDetail =
-                            (activityMainBinding.viewModel as MainViewModel).getWeatherForecast(et_city.text.toString(),
-                                object : UpdateUIListener {
-                                    override fun stopProgressbar() {
-                                        pb_fetch_forecast.visibility = View.GONE
-                                        tv_get_forecast.isEnabled = true
-                                    }
-
-                                    override fun notifyError(message: String) {
-                                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-                                    }
-                                })
-                    setObserver()
-                } else {
-                    Toast.makeText(this@MainActivity, "Please enter a city.", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(this@MainActivity, "Please ensure network connectivity.", Toast.LENGTH_SHORT).show()
-            }
+            } /*else {
+                Toast.makeText(this@MainActivity,
+                    (activityMainBinding.viewModel?.weatherDetail?.value as WeatherResponse.Error).message,
+                    Toast.LENGTH_LONG).show()
+            }*/
         }
+
+        et_city.setOnEditorActionListener { view, actionId, event ->
+            if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) ||
+                (actionId == EditorInfo.IME_ACTION_DONE)) {
+                fetchForecast()
+            }
+            false
+        }
+
+        tv_get_forecast.setOnClickListener { fetchForecast() }
+
     }
 
     fun setObserver(){
-        (weatherDetail as LiveData<WeatherModel>).observe(this@MainActivity,
-            Observer<WeatherModel> { t ->
-                rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(this@MainActivity,
-                    t?.forecast?.forecastday as List<Forecast>)
+        (weatherDetail as LiveData<WeatherResponse>).observe(this@MainActivity,
+            Observer<WeatherResponse> { t ->
+                if (t is WeatherResponse.Success) {
+                    tv_placeholder.visibility = View.GONE
+                    rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
+                        this@MainActivity,
+                        t.result.forecast.forecastday
+                    )
+                } else {
+                    tv_placeholder.visibility = View.VISIBLE
+                    Toast.makeText(this@MainActivity, (t as WeatherResponse.Error).message, Toast.LENGTH_SHORT).show()
+                    rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
+                        this@MainActivity,
+                        null
+                    )
+                }
             })
     }
 
@@ -92,6 +100,28 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.popBackStack()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun fetchForecast() {
+        if(this@MainActivity.isNetworkConnectionAvailable()) {
+            if (et_city.text.toString().trim().isNotEmpty()) {
+                pb_fetch_forecast.visibility = View.VISIBLE
+                backgroundScope.launch {
+                    withContext(Dispatchers.Default) {
+                        weatherDetail =
+                            (activityMainBinding.viewModel as MainViewModel).getWeatherForecast(et_city.text.toString())
+                    }
+                    mainScope.launch {
+                        setObserver()
+                        pb_fetch_forecast.visibility = View.GONE
+                    }
+                }
+            } else {
+                Toast.makeText(this@MainActivity, "Please enter a city.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this@MainActivity, "Please ensure network connectivity.", Toast.LENGTH_SHORT).show()
         }
     }
 }

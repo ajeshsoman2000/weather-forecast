@@ -1,84 +1,36 @@
 package com.example.weatherforecast.repository.service
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.weatherforecast.UpdateUIListener
 import com.example.weatherforecast.model.WeatherModel
-import com.google.gson.GsonBuilder
-import okhttp3.Interceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
-import okhttp3.OkHttpClient
+import com.example.weatherforecast.model.WeatherResponse
+import com.google.gson.Gson
+import java.lang.Exception
+import java.net.URL
+import java.net.URLEncoder
+import javax.net.ssl.HttpsURLConnection
 
 
-
-class WeatherForecastService: Callback<WeatherModel> {
+class WeatherForecastService {
     private val BASE_URL = "https://api.apixu.com"
-    private lateinit var updateUIListener: UpdateUIListener
-    private var weatherLiveData: LiveData<WeatherModel>? = null
+    private var weatherLiveData: LiveData<WeatherResponse>? = null
         get() = weatherMutableLiveData
-    private val weatherMutableLiveData = MutableLiveData<WeatherModel>()
+    private val weatherMutableLiveData = MutableLiveData<WeatherResponse>()
 
-    override fun onFailure(call: Call<WeatherModel>, t: Throwable) {
-        Log.v("WeatherForecastService", "onfailure => ${t.message}")
-        updateUIListener.stopProgressbar()
-        t.message?.let {
-            updateUIListener.notifyError(it)
-        }
-    }
-
-    override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
-        updateUIListener.stopProgressbar()
-        if (response.isSuccessful) {
-            Log.v("WeatherForecastService", "onResponse :: isSuccessful => ${response.body()}")
-            weatherMutableLiveData.value = response.body()
-        } else {
-            updateUIListener.notifyError(response.message())
-            Log.v("WeatherForecastService", "onResponse :: isNotSuccessful :: message => ${response.message()} and error code :: ${response.code()}")
-        }
-    }
-
-    fun fetch(city: String, listener: UpdateUIListener): LiveData<WeatherModel> {
-        Log.v("Forecast", "for city :: $city")
-        updateUIListener = listener
-        val okHttpClient = OkHttpClient.Builder().addInterceptor(object : Interceptor {
-            override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
-                val originalRequest = chain.request()
-
-                Log.v("okHttpClient :: ", "request details == url == ${originalRequest.url()}")
-                Log.v("okHttpClient :: ", "request details == body == ${originalRequest.body()}")
-
-                return chain.proceed(originalRequest)
-            }
-        }).build()
-
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
-        val forecastServiceInterface = retrofit.create(WeatherForecastServiceInterface::class.java)
-
-        val call: Call<WeatherModel> = forecastServiceInterface.getForecastForCity(city)
-        call.enqueue(this)
+    suspend fun fetch(city: String): LiveData<WeatherResponse> {
+            fetchForecastWithUrlCorrection(city)
         return weatherLiveData!!
     }
 
-    interface WeatherForecastServiceInterface {
-
-//        /v1/forecast.json?key=c7227658949e4dd7a6a135138191701&q=Chennai&days=5
-        @GET("/v1/forecast.json?key=c7227658949e4dd7a6a135138191701")
-        fun getForecastForCity(@Query("q") city: String, @Query("days") days: String = "5"): Call<WeatherModel>
+    suspend fun fetchForecastWithUrlCorrection(city: String) {
+        val url = "$BASE_URL/v1/forecast.json?key=c7227658949e4dd7a6a135138191701&q=${URLEncoder.encode(city, "utf-8")}&days=5"
+        val connection = URL(url).openConnection() as HttpsURLConnection
+        try {
+            val data = connection.inputStream.bufferedReader().readText()
+            val resultObj = Gson().fromJson(data, WeatherModel::class.java)
+            weatherMutableLiveData.postValue(WeatherResponse.Success(resultObj))
+        } catch (e: Exception) {
+            weatherMutableLiveData.postValue(WeatherResponse.Error(connection.responseMessage))
+        }
     }
 }
