@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
-    var weatherDetail: LiveData<WeatherResponse>? = null
+    private var weatherDetail: LiveData<WeatherResponse>? = null
     lateinit var activityMainBinding: ActivityMainBinding
     private val backgroundScope = CoroutineScope(Dispatchers.IO)
     private val mainScope = CoroutineScope(Dispatchers.Main)
@@ -46,24 +46,22 @@ class MainActivity : AppCompatActivity() {
         rv_weather_forecast.layoutManager = LinearLayoutManager(this@MainActivity)
         rv_weather_forecast.itemAnimator = DefaultItemAnimator()
 
-        if (activityMainBinding.viewModel?.weatherDetail != null ) {
+        weatherDetail = (activityMainBinding.viewModel as MainViewModel).getWeatherForecast()
 
-            if (activityMainBinding.viewModel?.weatherDetail?.value is WeatherResponse.Success) {
-                (activityMainBinding.viewModel?.weatherDetail?.value as WeatherResponse.Success).result.forecast.
-                    forecastday.let {
+        if ((weatherDetail as LiveData<WeatherResponse>).value != null) {
+            if (activityMainBinding.viewModel?.getWeatherForecast()?.value is WeatherResponse.Success) {
+                tv_placeholder.visibility = View.GONE
+                (activityMainBinding.viewModel?.getWeatherForecast()?.value as WeatherResponse.Success).result.forecast.forecastday.let {
                     rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
                         this@MainActivity,
                         it
                     )
                 }
-            } /*else {
-                Toast.makeText(this@MainActivity,
-                    (activityMainBinding.viewModel?.weatherDetail?.value as WeatherResponse.Error).message,
-                    Toast.LENGTH_LONG).show()
-            }*/
+            }
         }
 
-        et_city.setOnEditorActionListener { view, actionId, event ->
+
+        et_city.setOnEditorActionListener { _, actionId, event ->
             if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) ||
                 (actionId == EditorInfo.IME_ACTION_DONE)) {
                 fetchForecast()
@@ -75,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setObserver(){
+    private fun setObserver(){
         (weatherDetail as LiveData<WeatherResponse>).observe(this@MainActivity,
             Observer<WeatherResponse> { t ->
                 if (t is WeatherResponse.Success) {
@@ -104,13 +102,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchForecast() {
-        if(this@MainActivity.isNetworkConnectionAvailable()) {
+        if (this@MainActivity.isNetworkConnectionAvailable()) {
             if (et_city.text.toString().trim().isNotEmpty()) {
                 pb_fetch_forecast.visibility = View.VISIBLE
                 backgroundScope.launch {
                     withContext(Dispatchers.Default) {
-                        weatherDetail =
-                            (activityMainBinding.viewModel as MainViewModel).getWeatherForecast(et_city.text.toString())
+                        (activityMainBinding.viewModel as MainViewModel).updateWeatherForecast(et_city.text.toString())
                     }
                     mainScope.launch {
                         setObserver()

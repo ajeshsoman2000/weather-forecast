@@ -1,6 +1,7 @@
 package com.example.weatherforecast.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherforecast.model.Forecast
 import com.example.weatherforecast.model.WeatherModel
@@ -9,17 +10,21 @@ import com.example.weatherforecast.repository.WeatherRepository
 
 class MainViewModel: ViewModel() {
 
-    var weatherDetail: LiveData<WeatherResponse>? = null
+    private var weatherDetail: MutableLiveData<WeatherResponse> = MutableLiveData()
     lateinit var selectedForecast: Forecast
+    private var weatherResponse: WeatherResponse? = null
 
-    suspend fun getWeatherForecast(city: String): LiveData<WeatherResponse>? {
-        return if (city.isNotEmpty()) {
-            weatherDetail = WeatherRepository().getWeatherForecast(city)
-            weatherDetail as LiveData<WeatherResponse>
-        } else {
-            null
-        }
+    fun getWeatherForecast(): LiveData<WeatherResponse> {
+        return weatherDetail
     }
 
+    suspend fun updateWeatherForecast(city: String) {
+        if (city.isNotEmpty()) {
+            weatherResponse = WeatherRepository().getWeatherForecast(city)
+            weatherDetail.postValue(weatherResponse)
+        } else {
+            weatherDetail.postValue(WeatherResponse.Error("Please enter a city."))
+        }
+    }
 
 }

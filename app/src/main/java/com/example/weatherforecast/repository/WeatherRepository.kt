@@ -7,7 +7,7 @@ import com.example.weatherforecast.repository.service.WeatherForecastService
 
 class WeatherRepository {
 
-    suspend fun getWeatherForecast(city: String): LiveData<WeatherResponse> {
+    suspend fun getWeatherForecast(city: String): WeatherResponse {
         return WeatherForecastService().fetch(city)
     }
 }
