@@ -1,6 +1,7 @@
 package com.example.weatherforecast
 
 import com.example.weatherforecast.utils.changeDateFormat
+import com.example.weatherforecast.utils.getDayFromDate
 import org.junit.Test
 import org.junit.Assert.*
 

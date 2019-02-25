@@ -1,7 +1,12 @@
 package com.example.weatherforecast
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.weatherforecast.model.WeatherModel
+import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.viewmodel.MainViewModel
+import kotlinx.coroutines.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -14,24 +19,30 @@ import org.mockito.Mockito
 class MainViewModelUnitTest {
 
     @Mock
-    var mockUpdateUIListener: UpdateUIListener? = null
+    private lateinit var mockViewModel: MainViewModel
+    @Mock
+    private lateinit var mockWeatherModel: WeatherModel
+
+    private val backgroundScope = CoroutineScope(Dispatchers.Default)
 
     @Before
     fun setup() {
-        mockUpdateUIListener = Mockito.spy(UpdateUIListener::class.java)
+        mockViewModel = Mockito.mock(MainViewModel::class.java)
+        mockWeatherModel = Mockito.mock(WeatherModel::class.java)
     }
 
     @Test
     fun getForecast_withoutCity() {
-        val viewModel = MainViewModel()
-        val forecast = viewModel.getWeatherForecast("", mockUpdateUIListener!!)
-        Assert.assertNull(forecast)
+        Mockito.`when`(mockViewModel.getWeatherForecast()).thenReturn(null)
+        val response = mockViewModel.getWeatherForecast()
+        Assert.assertNull(response)
     }
 
     @Test
     fun getForecast_withCity() {
-        val viewModel = MainViewModel()
-        val forecast = viewModel.getWeatherForecast("London", mockUpdateUIListener!!)
-        Assert.assertNotNull(forecast)
+        val mockLiveData = MutableLiveData<WeatherResponse>()
+        Mockito.`when`(mockViewModel.getWeatherForecast()).thenReturn(mockLiveData)
+        val response = mockViewModel.getWeatherForecast()
+        Assert.assertNotNull(response)
     }
 }
