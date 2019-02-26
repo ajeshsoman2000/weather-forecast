@@ -1,8 +1,8 @@
 package com.example.weatherforecast
 
 import android.content.Context
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.weatherforecast.utils.getDayFromDate
 import com.example.weatherforecast.utils.isNetworkConnectionAvailable
 import org.junit.Assert
@@ -45,6 +45,6 @@ class ForecastInstrumentedTest {
 
     @Test
     fun connectivity_test() {
-        assertTrue(instrumentationCtx?.isNetworkConnectionAvailable()!!)
+        instrumentationCtx?.isNetworkConnectionAvailable()?.let { assertTrue(it) }
     }
 }
