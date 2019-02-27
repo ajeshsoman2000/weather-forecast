@@ -1,9 +1,11 @@
 package com.example.weatherforecast.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,7 +16,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforecast.R
 import com.example.weatherforecast.databinding.ActivityMainBinding
-import com.example.weatherforecast.model.WeatherModel
 import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.utils.isNetworkConnectionAvailable
 import com.example.weatherforecast.view.adapters.WeatherForecastRecyclerViewAdapter
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         if ((weatherDetail as LiveData<WeatherResponse>).value != null) {
             if (activityMainBinding.viewModel?.getWeatherForecast()?.value is WeatherResponse.Success) {
+                window.setSoftInputMode(InputMethodManager.HIDE_NOT_ALWAYS)
                 tv_placeholder.visibility = View.GONE
                 (activityMainBinding.viewModel?.getWeatherForecast()?.value as WeatherResponse.Success).result.forecast.forecastday.let {
                     rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(
@@ -104,6 +106,8 @@ class MainActivity : AppCompatActivity() {
     private fun fetchForecast() {
         if (this@MainActivity.isNetworkConnectionAvailable()) {
             if (et_city.text.toString().trim().isNotEmpty()) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
                 pb_fetch_forecast.visibility = View.VISIBLE
                 backgroundScope.launch {
                     withContext(Dispatchers.Default) {

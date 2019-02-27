@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherforecast.model.Forecast
-import com.example.weatherforecast.model.WeatherModel
 import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.repository.WeatherRepository
 
 class MainViewModel: ViewModel() {
 
-    private var weatherDetail: MutableLiveData<WeatherResponse> = MutableLiveData()
+    private val weatherDetail: MutableLiveData<WeatherResponse> = MutableLiveData()
     lateinit var selectedForecast: Forecast
     private var weatherResponse: WeatherResponse? = null
 
