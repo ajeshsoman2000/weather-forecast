@@ -1,7 +1,5 @@
 package com.example.weatherforecast.view
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,7 +13,6 @@ import com.example.weatherforecast.utils.getDayFromDate
 import com.example.weatherforecast.viewmodel.MainViewModel
 import com.example.weatherforecast.viewmodel.ViewModelFactory
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_weather_detail.*
 
 class WeatherDetailFragment : Fragment() {

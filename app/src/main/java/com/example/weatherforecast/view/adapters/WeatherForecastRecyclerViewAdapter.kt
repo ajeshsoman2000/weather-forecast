@@ -13,7 +13,6 @@ import com.example.weatherforecast.utils.changeDateFormat
 import com.example.weatherforecast.view.MainActivity
 import com.example.weatherforecast.view.WeatherDetailFragment
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class WeatherForecastRecyclerViewAdapter(val context: Context, val weatherForecastList: List<Forecast>?): RecyclerView.Adapter<WeatherForecastItemViewHolder>() {

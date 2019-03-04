@@ -1,7 +1,5 @@
 package com.example.weatherforecast.repository
 
-import androidx.lifecycle.LiveData
-import com.example.weatherforecast.model.WeatherModel
 import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.repository.service.WeatherForecastService
 
