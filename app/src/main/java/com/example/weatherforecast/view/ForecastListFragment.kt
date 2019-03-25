@@ -32,8 +32,6 @@ class ForecastListFragment: Fragment() {
 
     private var weatherDetail: LiveData<WeatherResponse>? = null
     lateinit var mainViewModel: MainViewModel
-    private val backgroundScope = CoroutineScope(Dispatchers.IO)
-    private val mainScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_forecast_list, container, false)
@@ -101,11 +99,11 @@ class ForecastListFragment: Fragment() {
                 val imm = (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
                 pb_fetch_forecast.visibility = View.VISIBLE
-                backgroundScope.launch {
+                mainViewModel.backgroundScope.launch {
                     withContext(Dispatchers.Default) {
                         mainViewModel.updateWeatherForecast(et_city.text.toString())
                     }
-                    mainScope.launch {
+                    mainViewModel.mainScope.launch {
                         setObserver()
                         pb_fetch_forecast.visibility = View.GONE
                     }

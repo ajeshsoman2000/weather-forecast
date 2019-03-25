@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.flFragmentParent.visibility = View.VISIBLE
         supportFragmentManager.beginTransaction().add(
             R.id.fl_fragment_parent,
-            ForecastListFragment()
+            LoginFragment()
         ).commit()
 
     }
