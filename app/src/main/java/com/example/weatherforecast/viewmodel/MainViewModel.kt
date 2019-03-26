@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.weatherforecast.model.Forecast
 import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.repository.WeatherRepository
+import com.example.weatherforecast.repository.database.userdetail.UserDetailEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -16,6 +17,7 @@ class MainViewModel: ViewModel() {
     private var weatherResponse: WeatherResponse? = null
     val backgroundScope = CoroutineScope(Dispatchers.IO)
     val mainScope = CoroutineScope(Dispatchers.Main)
+    var loggedInUser: UserDetailEntity? = null
 
     fun getWeatherForecast(): LiveData<WeatherResponse> {
         return weatherDetail

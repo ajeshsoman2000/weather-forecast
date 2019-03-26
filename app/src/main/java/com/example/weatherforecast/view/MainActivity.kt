@@ -26,11 +26,13 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.viewModel =
             ViewModelProviders.of(this@MainActivity, ViewModelFactory()).get(MainViewModel::class.java)
 
-        activityMainBinding.flFragmentParent.visibility = View.VISIBLE
-        supportFragmentManager.beginTransaction().add(
-            R.id.fl_fragment_parent,
-            LoginFragment()
-        ).commit()
+        if (savedInstanceState == null) {
+            activityMainBinding.flFragmentParent.visibility = View.VISIBLE
+            supportFragmentManager.beginTransaction().add(
+                R.id.fl_fragment_parent,
+                LoginFragment()
+            ).commit()
+        }
 
     }
 

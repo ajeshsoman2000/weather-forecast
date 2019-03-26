@@ -2,6 +2,7 @@ package com.example.weatherforecast.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforecast.R
 import com.example.weatherforecast.model.WeatherResponse
+import com.example.weatherforecast.repository.database.userdetail.UserDetailEntity
 import com.example.weatherforecast.utils.isNetworkConnectionAvailable
 import com.example.weatherforecast.view.adapters.WeatherForecastRecyclerViewAdapter
 import com.example.weatherforecast.viewmodel.MainViewModel
@@ -32,6 +34,7 @@ class ForecastListFragment: Fragment() {
 
     private var weatherDetail: LiveData<WeatherResponse>? = null
     lateinit var mainViewModel: MainViewModel
+    private val TAG = "ForecastListFragment"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_forecast_list, container, false)
@@ -40,6 +43,10 @@ class ForecastListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mainViewModel = ViewModelProviders.of(activity as MainActivity, ViewModelFactory()).get(MainViewModel::class.java)
+
+        if (mainViewModel.loggedInUser != null && savedInstanceState != null) {
+            Toast.makeText(activity as MainActivity, "Welcome ${(mainViewModel.loggedInUser as UserDetailEntity).name}.", Toast.LENGTH_LONG).show()
+        }
 
         rv_weather_forecast.layoutManager = LinearLayoutManager(activity)
         rv_weather_forecast.itemAnimator = DefaultItemAnimator()

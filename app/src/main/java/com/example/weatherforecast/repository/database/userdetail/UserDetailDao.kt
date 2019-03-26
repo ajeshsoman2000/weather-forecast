@@ -10,6 +10,6 @@ interface UserDetailDao {
     @Insert
     fun addUser(user: UserDetailEntity)
 
-    @Query("SELECT * from user_table WHERE email = :email")
-    fun getUser(email: String): UserDetailEntity
+    @Query("SELECT * from user_table WHERE email = :emailID")
+    fun getUser(emailID: String): UserDetailEntity
 }
