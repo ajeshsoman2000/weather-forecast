@@ -15,6 +15,7 @@ import com.example.weatherforecast.repository.database.userdetail.UserDetailEnti
 import com.example.weatherforecast.utils.hashPassword
 import com.example.weatherforecast.viewmodel.MainViewModel
 import com.example.weatherforecast.viewmodel.ViewModelFactory
+import kotlinx.android.synthetic.main.custom_progressbar.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.launch
 
@@ -40,26 +41,29 @@ class LoginFragment: Fragment() {
                 val password = et_login_password.text.toString().trim()
 
                 if (email.isNotEmpty() && password.isNotEmpty()) {
-                    var registeredUser: UserDetailEntity? = null
-                    registeredUser = userDao?.getUser(email)
+                    mainViewModel.mainScope.launch { pb_fetch_forecast.visibility = View.VISIBLE }
+                    val registeredUser = userDao?.getUser(email)
 
                     if (registeredUser != null) {
                         val hashedPassword = password.hashPassword()
-                        if (hashedPassword == registeredUser?.password) {
+                        if (hashedPassword == registeredUser.password) {
                             mainViewModel.loggedInUser = registeredUser
                             (activity as MainActivity).supportFragmentManager.beginTransaction().addToBackStack(null)
                                 .replace(
                                     R.id.fl_fragment_parent,
                                     ForecastListFragment()
                                 ).commit()
+                            mainViewModel.mainScope.launch { pb_fetch_forecast.visibility = View.GONE }
                         } else {
                             mainViewModel.mainScope.launch {
+                                pb_fetch_forecast.visibility = View.GONE
                                 Toast.makeText(activity as MainActivity, "Invalid credentials.", Toast.LENGTH_LONG)
                                     .show()
                             }
                         }
                     } else {
                         mainViewModel.mainScope.launch {
+                            pb_fetch_forecast.visibility = View.GONE
                             Toast.makeText(activity as MainActivity, "No such user.", Toast.LENGTH_LONG).show()
                         }
                     }
