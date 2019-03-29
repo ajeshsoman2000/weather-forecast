@@ -16,7 +16,8 @@
         <EditText android:id="@+id/et_register_email" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:hint="email id"
-                  android:inputType="textEmailAddress"/>
+                  android:inputType="textEmailAddress"
+                  android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_register_name"
@@ -30,7 +31,8 @@
                                                            android:layout_marginRight="8dp">
         <EditText android:id="@+id/et_register_name" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:hint="Name"/>
+                  android:hint="Name"
+                  android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_register_password"
@@ -45,15 +47,25 @@
         <EditText android:id="@+id/et_register_password" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:hint="password"
-                  android:inputType="textPassword"/>
+                  android:inputType="textPassword"
+                  android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button android:id="@+id/btn_register" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/til_register_password"
-            android:text="Register"
-            app:layout_constraintLeft_toLeftOf="@id/til_register_email"
-            app:layout_constraintRight_toRightOf="@id/til_register_email"
-            android:layout_marginTop="16dp"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+    <TextView android:id="@+id/btn_register" android:layout_width="wrap_content" android:layout_height="wrap_content"
+              app:layout_constraintTop_toBottomOf="@id/til_register_password"
+              android:text="Register"
+              app:layout_constraintLeft_toLeftOf="@id/til_register_email"
+              app:layout_constraintRight_toRightOf="@id/til_register_email"
+              android:layout_marginTop="16dp"
+              android:background="@color/colorAccent"
+              android:textSize="16sp"
+              android:textStyle="bold"
+              android:textColor="@android:color/white"
+              android:paddingLeft="32dp"
+              android:paddingRight="32dp"
+              android:paddingTop="8dp"
+              android:paddingBottom="8dp"/>
+
+    <include layout="@layout/custom_progressbar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

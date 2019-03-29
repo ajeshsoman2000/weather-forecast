@@ -23,9 +23,7 @@ import com.example.weatherforecast.utils.isNetworkConnectionAvailable
 import com.example.weatherforecast.view.adapters.WeatherForecastRecyclerViewAdapter
 import com.example.weatherforecast.viewmodel.MainViewModel
 import com.example.weatherforecast.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_forecast_list.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

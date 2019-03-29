@@ -1,10 +1,12 @@
 package com.example.weatherforecast.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -41,19 +43,24 @@ class LoginFragment: Fragment() {
                 val password = et_login_password.text.toString().trim()
 
                 if (email.isNotEmpty() && password.isNotEmpty()) {
+                    val imm = (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
                     mainViewModel.mainScope.launch { pb_fetch_forecast.visibility = View.VISIBLE }
                     val registeredUser = userDao?.getUser(email)
 
                     if (registeredUser != null) {
                         val hashedPassword = password.hashPassword()
                         if (hashedPassword == registeredUser.password) {
+                            mainViewModel.mainScope.launch { pb_fetch_forecast.visibility = View.GONE }
                             mainViewModel.loggedInUser = registeredUser
-                            (activity as MainActivity).supportFragmentManager.beginTransaction().addToBackStack(null)
+
+                            (activity as MainActivity).supportFragmentManager.beginTransaction()
+                                .remove(this@LoginFragment).commit()
+                            (activity as MainActivity).supportFragmentManager.beginTransaction()
                                 .replace(
                                     R.id.fl_fragment_parent,
                                     ForecastListFragment()
                                 ).commit()
-                            mainViewModel.mainScope.launch { pb_fetch_forecast.visibility = View.GONE }
                         } else {
                             mainViewModel.mainScope.launch {
                                 pb_fetch_forecast.visibility = View.GONE

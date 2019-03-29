@@ -4,8 +4,6 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent">
 
-    <include layout="@layout/custom_progressbar"/>
-
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_login_email"
                                                            android:layout_width="match_parent"
                                                            android:layout_height="wrap_content"
@@ -18,7 +16,8 @@
         <EditText android:id="@+id/et_login_email" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:hint="email id"
-                  android:inputType="textEmailAddress"/>
+                  android:inputType="textEmailAddress"
+                  android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_login_password"
@@ -33,23 +32,33 @@
         <EditText android:id="@+id/et_login_password" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:hint="password"
-                  android:inputType="textPassword"/>
+                  android:inputType="textPassword"
+                  android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button android:id="@+id/btn_login" android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <TextView android:id="@+id/btn_login" android:layout_width="wrap_content" android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/til_login_password"
             android:text="Login"
             app:layout_constraintLeft_toLeftOf="@id/til_login_email"
             app:layout_constraintRight_toRightOf="@id/til_login_email"
             android:layout_marginTop="16dp"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+            android:background="@color/colorAccent"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
 
-    <Button android:id="@+id/btn_register" android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <TextView android:id="@+id/btn_register" android:layout_width="wrap_content" android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/btn_login"
             android:text="Register"
             app:layout_constraintLeft_toLeftOf="@id/til_login_email"
             app:layout_constraintRight_toRightOf="@id/til_login_email"
             android:layout_marginTop="16dp"
             android:background="@android:color/transparent"/>
+
+    <include layout="@layout/custom_progressbar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

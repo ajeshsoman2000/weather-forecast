@@ -1,10 +1,12 @@
 package com.example.weatherforecast.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -15,8 +17,11 @@ import com.example.weatherforecast.repository.database.userdetail.UserDetailEnti
 import com.example.weatherforecast.utils.hashPassword
 import com.example.weatherforecast.viewmodel.MainViewModel
 import com.example.weatherforecast.viewmodel.ViewModelFactory
+import kotlinx.android.synthetic.main.custom_progressbar.*
 import kotlinx.android.synthetic.main.fragment_registration.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegistrationFragment: Fragment() {
 
@@ -44,9 +49,17 @@ class RegistrationFragment: Fragment() {
         val email = et_register_email.text.toString().trim()
         val password = et_register_password.text.toString().trim()
         if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+            val imm = (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+            pb_fetch_forecast.visibility = View.VISIBLE
             mainViewModel.backgroundScope.launch {
-                val value = userDao?.addUser(UserDetailEntity(email, name, password.hashPassword()))
-                Log.v(TAG, "insert status = $value")
+                withContext(Dispatchers.Default) {
+                    userDao?.addUser(UserDetailEntity(email, name, password.hashPassword()))
+                }
+                mainViewModel.mainScope.launch {
+                    pb_fetch_forecast.visibility = View.GONE
+                    (activity as MainActivity).supportFragmentManager.popBackStack()
+                }
             }
 
         } else {
