@@ -17,7 +17,8 @@
                   android:layout_height="wrap_content"
                   android:hint="email id"
                   android:inputType="textEmailAddress"
-                  android:maxLines="1"/>
+                  android:maxLines="1"
+                  android:imeOptions="actionNext"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_register_name"
@@ -32,7 +33,9 @@
         <EditText android:id="@+id/et_register_name" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:hint="Name"
-                  android:maxLines="1"/>
+                  android:maxLines="1"
+                  android:inputType="text"
+                  android:imeOptions="actionNext"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/til_register_password"
@@ -48,7 +51,8 @@
                   android:layout_height="wrap_content"
                   android:hint="password"
                   android:inputType="textPassword"
-                  android:maxLines="1"/>
+                  android:maxLines="1"
+                  android:imeOptions="actionDone"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView android:id="@+id/btn_register" android:layout_width="wrap_content" android:layout_height="wrap_content"

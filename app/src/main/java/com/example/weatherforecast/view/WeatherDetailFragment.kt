@@ -11,7 +11,6 @@ import com.example.weatherforecast.R
 import com.example.weatherforecast.utils.changeDateFormat
 import com.example.weatherforecast.utils.getDayFromDate
 import com.example.weatherforecast.viewmodel.MainViewModel
-import com.example.weatherforecast.viewmodel.ViewModelFactory
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_weather_detail.*
 

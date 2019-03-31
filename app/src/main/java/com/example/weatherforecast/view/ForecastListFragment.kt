@@ -2,7 +2,6 @@ package com.example.weatherforecast.view
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +21,6 @@ import com.example.weatherforecast.repository.database.userdetail.UserDetailEnti
 import com.example.weatherforecast.utils.isNetworkConnectionAvailable
 import com.example.weatherforecast.view.adapters.WeatherForecastRecyclerViewAdapter
 import com.example.weatherforecast.viewmodel.MainViewModel
-import com.example.weatherforecast.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_forecast_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

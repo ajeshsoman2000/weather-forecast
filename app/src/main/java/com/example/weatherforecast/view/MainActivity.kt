@@ -7,9 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.example.weatherforecast.R
 import com.example.weatherforecast.databinding.ActivityMainBinding
-import com.example.weatherforecast.model.Forecast
 import com.example.weatherforecast.viewmodel.MainViewModel
-import com.example.weatherforecast.viewmodel.ViewModelFactory
 
 
 class MainActivity : AppCompatActivity() {
