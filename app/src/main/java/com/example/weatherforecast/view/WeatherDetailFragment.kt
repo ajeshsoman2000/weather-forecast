@@ -27,7 +27,7 @@ class WeatherDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel = ViewModelProviders.of(activity as MainActivity, ViewModelFactory()).get(MainViewModel::class.java)
+        val viewModel = ViewModelProviders.of(activity as MainActivity).get(MainViewModel::class.java)
         tv_condition.text = "Expect: ${viewModel.selectedForecast.day.condition.text}"
         tv_max_temp.text = "Max: ${viewModel.selectedForecast.day.maxtemp_c}\u2103 / ${viewModel.selectedForecast.day.maxtemp_f}\u2109"
         tv_min_temp.text = "Min: ${viewModel.selectedForecast.day.mintemp_c}\u2103 / ${viewModel.selectedForecast.day.mintemp_f}℉"

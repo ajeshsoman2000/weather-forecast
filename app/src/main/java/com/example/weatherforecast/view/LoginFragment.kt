@@ -33,7 +33,7 @@ class LoginFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = ViewModelProviders.of(activity as MainActivity, ViewModelFactory()).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProviders.of(activity as MainActivity).get(MainViewModel::class.java)
         db = UserDetailDB.getAppDataBase(context = activity as MainActivity)
         userDao = db?.userDetailDao()
 

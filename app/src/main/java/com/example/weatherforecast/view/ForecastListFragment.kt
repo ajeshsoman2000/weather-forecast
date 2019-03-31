@@ -41,7 +41,7 @@ class ForecastListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel = ViewModelProviders.of(activity as MainActivity, ViewModelFactory()).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProviders.of(activity as MainActivity).get(MainViewModel::class.java)
 
         if (mainViewModel.loggedInUser != null && savedInstanceState != null) {
             Toast.makeText(activity as MainActivity, "Welcome ${(mainViewModel.loggedInUser as UserDetailEntity).name}.", Toast.LENGTH_LONG).show()

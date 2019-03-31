@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         activityMainBinding.viewModel =
-            ViewModelProviders.of(this@MainActivity, ViewModelFactory()).get(MainViewModel::class.java)
+            ViewModelProviders.of(this@MainActivity).get(MainViewModel::class.java)
 
         if (savedInstanceState == null) {
             activityMainBinding.flFragmentParent.visibility = View.VISIBLE

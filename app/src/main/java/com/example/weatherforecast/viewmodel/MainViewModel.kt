@@ -1,5 +1,7 @@
 package com.example.weatherforecast.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +12,7 @@ import com.example.weatherforecast.repository.database.userdetail.UserDetailEnti
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class MainViewModel: ViewModel() {
+class MainViewModel(application: Application): AndroidViewModel(application) {
 
     private val weatherDetail: MutableLiveData<WeatherResponse> = MutableLiveData()
     lateinit var selectedForecast: Forecast
