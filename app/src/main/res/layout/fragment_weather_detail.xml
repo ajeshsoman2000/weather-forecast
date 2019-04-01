@@ -49,7 +49,7 @@
               android:layout_marginTop="8dp"
               app:layout_constraintLeft_toLeftOf="parent"
               app:layout_constraintRight_toRightOf="parent"
-              android:text="Temperatures"
+              android:text="@string/text_temperatures"
               android:gravity="center"
               android:textColor="@android:color/black"
               android:textStyle="bold"/>
@@ -85,7 +85,7 @@
               app:layout_constraintRight_toLeftOf="@id/iv_condition"
               android:textColor="@android:color/black"
               android:textStyle="bold"
-              android:text="Wind Speed: "
+              android:text="@string/text_windspeed"
               android:layout_marginTop="32dp"/>
 
     <TextView android:id="@+id/tv_windspeed"
@@ -108,7 +108,7 @@
               app:layout_constraintRight_toLeftOf="@id/iv_condition"
               android:textColor="@android:color/black"
               android:textStyle="bold"
-              android:text="Visibility: "
+              android:text="@string/text_visibility"
               android:layout_marginTop="8dp"/>
 
     <TextView android:id="@+id/tv_visibility"
@@ -131,7 +131,7 @@
               app:layout_constraintRight_toLeftOf="@id/iv_condition"
               android:textColor="@android:color/black"
               android:textStyle="bold"
-              android:text="Humidity: "
+              android:text="@string/text_humidity"
               android:layout_marginTop="8dp"/>
 
     <TextView android:id="@+id/tv_humidity"

@@ -21,7 +21,7 @@
         <EditText android:id="@+id/et_city"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:hint="Enter city"
+                  android:hint="@string/hint_enter_city"
                   android:singleLine="true"
                   android:paddingLeft="8dp"
                   android:imeOptions="actionDone"/>
@@ -29,7 +29,7 @@
 
     <TextView
             android:id="@+id/tv_get_forecast"
-            android:text="Get Forecast"
+            android:text="@string/text_get_forecast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +50,7 @@
               android:textSize="16sp"
               android:gravity="center"
               android:textColor="@android:color/darker_gray"
-              android:text="No weather forecasts available."/>
+              android:text="@string/placeholder_text_no_forecasts"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_weather_forecast"

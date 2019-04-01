@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">WeatherForecast</string>
+    <string name="err_invalid_credentials">Invalid credentials</string>
+    <string name="err_user_not_found">No such user.</string>
+    <string name="err_no_city_entered">Please enter a city.</string>
+    <string name="err_no_connectivity">Please ensure network connectivity.</string>
+    <string name="err_invalid_email_format">Invalid email format.</string>
+    <string name="err_all_fields_required">All fields are mandatory.</string>
+
+    <string name="hint_enter_city">Enter city</string>
+    <string name="text_get_forecast">Get Forecast</string>
+    <string name="placeholder_text_no_forecasts">No weather forecasts available.</string>
+    <string name="hint_email_id">email id</string>
+    <string name="hint_password">password</string>
+    <string name="text_login">Login</string>
+    <string name="text_register">Register</string>
+    <string name="hint_name">name</string>
+    <string name="text_temperatures">Temperatures</string>
+    <string name="text_windspeed">Wind Speed: </string>
+    <string name="text_visibility">Visibility: </string>
+    <string name="text_humidity">Humidity: </string>
+
+    <string name="max_temp">Max: %s</string>
+    <string name="max_temp_with_format">Max: %s / %s</string>
+    <string name="min_temp">Min: %s</string>
+    <string name="min_temp_with_format">Min: %s / %s</string>
+    <string name="condition">Expect: %s</string>
+    <string name="max_wind_speed">Max: %s kmph / %s mph</string>
+    <string name="visibility">Avg: %s km / %s miles</string>
+    <string name="humidity">Avg: %s </string>
+    <string name="day">%s: %s</string>
+
 </resources>

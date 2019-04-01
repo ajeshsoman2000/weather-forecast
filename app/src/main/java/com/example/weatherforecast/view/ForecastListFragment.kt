@@ -50,20 +50,7 @@ class ForecastListFragment: Fragment() {
 
         weatherDetail = mainViewModel.getWeatherForecast()
 
-        if ((weatherDetail as LiveData<WeatherResponse>).value != null) {
-            if (mainViewModel.getWeatherForecast().value is WeatherResponse.Success) {
-                (activity as MainActivity).window.setSoftInputMode(InputMethodManager.HIDE_NOT_ALWAYS)
-                tv_placeholder.visibility = View.GONE
-                (mainViewModel.getWeatherForecast().value as WeatherResponse.Success).result.forecast.forecastday.let {
-                    rv_weather_forecast.adapter =
-                        WeatherForecastRecyclerViewAdapter(
-                            activity as MainActivity,
-                            it
-                        )
-                }
-            }
-        }
-
+        setObserver()
 
         et_city.setOnEditorActionListener { _, actionId, event ->
             if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) ||
@@ -98,25 +85,17 @@ class ForecastListFragment: Fragment() {
             })
     }
     private fun fetchForecast() {
-        if ((activity as MainActivity).isNetworkConnectionAvailable()) {
-            if (et_city.text.toString().trim().isNotEmpty()) {
-                val imm = (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
-                pb_fetch_forecast.visibility = View.VISIBLE
-                mainViewModel.backgroundScope.launch {
-                    withContext(Dispatchers.Default) {
-                        mainViewModel.updateWeatherForecast(et_city.text.toString())
-                    }
-                    mainViewModel.mainScope.launch {
-                        setObserver()
-                        pb_fetch_forecast.visibility = View.GONE
-                    }
-                }
-            } else {
-                Toast.makeText(activity as MainActivity, "Please enter a city.", Toast.LENGTH_SHORT).show()
+        val imm = (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+        pb_fetch_forecast.visibility = View.VISIBLE
+        mainViewModel.backgroundScope.launch {
+            withContext(Dispatchers.Default) {
+                mainViewModel.updateWeatherForecast(et_city.text.toString())
             }
-        } else {
-            Toast.makeText(activity as MainActivity, "Please ensure network connectivity.", Toast.LENGTH_SHORT).show()
+            mainViewModel.mainScope.launch {
+                pb_fetch_forecast.visibility = View.GONE
+                rv_weather_forecast.adapter?.notifyDataSetChanged()
+            }
         }
     }
 }

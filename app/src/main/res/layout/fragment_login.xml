@@ -15,7 +15,7 @@
                                                            android:layout_marginRight="8dp">
         <EditText android:id="@+id/et_login_email" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:hint="email id"
+                  android:hint="@string/hint_email_id"
                   android:inputType="textEmailAddress"
                   android:maxLines="1"
                   android:imeOptions="actionNext"/>
@@ -32,7 +32,7 @@
                                                            android:layout_marginRight="8dp">
         <EditText android:id="@+id/et_login_password" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:hint="password"
+                  android:hint="@string/hint_password"
                   android:inputType="textPassword"
                   android:maxLines="1"
                   android:imeOptions="actionDone"/>
@@ -40,7 +40,7 @@
 
     <TextView android:id="@+id/btn_login" android:layout_width="wrap_content" android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@id/til_login_password"
-              android:text="Login"
+              android:text="@string/text_login"
               app:layout_constraintLeft_toLeftOf="@id/til_login_email"
               app:layout_constraintRight_toRightOf="@id/til_login_email"
               android:layout_marginTop="16dp"
@@ -55,7 +55,7 @@
 
     <TextView android:id="@+id/btn_register" android:layout_width="wrap_content" android:layout_height="wrap_content"
               app:layout_constraintTop_toBottomOf="@id/btn_login"
-              android:text="Register"
+              android:text="@string/text_register"
               app:layout_constraintLeft_toLeftOf="@id/til_login_email"
               app:layout_constraintRight_toRightOf="@id/til_login_email"
               android:layout_marginTop="16dp"

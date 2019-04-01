@@ -1,6 +1,6 @@
 package com.example.weatherforecast.model
 
-class WeatherModel(val forecast: ForeCasts)
+data class WeatherModel(val forecast: ForeCasts)
 
 data class ForeCasts(val forecastday: List<Forecast>)
 

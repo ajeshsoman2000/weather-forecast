@@ -27,16 +27,36 @@ class WeatherDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel = ViewModelProviders.of(activity as MainActivity).get(MainViewModel::class.java)
-        tv_condition.text = "Expect: ${viewModel.selectedForecast.day.condition.text}"
-        tv_max_temp.text = "Max: ${viewModel.selectedForecast.day.maxtemp_c}\u2103 / ${viewModel.selectedForecast.day.maxtemp_f}\u2109"
-        tv_min_temp.text = "Min: ${viewModel.selectedForecast.day.mintemp_c}\u2103 / ${viewModel.selectedForecast.day.mintemp_f}℉"
-        tv_windspeed.text = "Max: ${viewModel.selectedForecast.day.maxwind_kph} kmph / ${viewModel.selectedForecast.day.maxwind_mph} mph"
-        tv_visibility.text = "Avg: ${viewModel.selectedForecast.day.avgvis_km} km / ${viewModel.selectedForecast.day.avgvis_miles} miles"
-        tv_humidity.text = "Avg: ${viewModel.selectedForecast.day.avghumidity} %"
+
+        tv_condition.text = getString(R.string.condition,
+            viewModel.selectedForecast.day.condition.text)
+
+        tv_max_temp.text = getString(R.string.max_temp_with_format,
+            "${viewModel.selectedForecast.day.maxtemp_c}\u2103",
+            "${viewModel.selectedForecast.day.maxtemp_f}\u2109")
+
+        tv_min_temp.text = getString(R.string.min_temp_with_format,
+            "${viewModel.selectedForecast.day.mintemp_c}\u2103",
+            "${viewModel.selectedForecast.day.mintemp_f}℉")
+
+        tv_windspeed.text = getString(R.string.max_wind_speed,
+            "${viewModel.selectedForecast.day.maxwind_kph} ",
+            "${viewModel.selectedForecast.day.maxwind_mph} ")
+
+        tv_visibility.text = getString(R.string.visibility,
+            "${viewModel.selectedForecast.day.avgvis_km} ",
+                    "${viewModel.selectedForecast.day.avgvis_miles} ")
+
+        tv_humidity.text = getString(R.string.humidity,
+            "${viewModel.selectedForecast.day.avghumidity}\u0025")
+
         Picasso.with(context).load("https:${viewModel
-            ?.selectedForecast?.day?.condition?.icon}").into(iv_condition)
-        tv_day.text = "${viewModel.selectedForecast.date.changeDateFormat("yyyy-MM-dd", "dd-MM-yyyy").getDayFromDate("dd-MM-yyyy")}: " +
-                "${viewModel.selectedForecast.date.changeDateFormat("yyyy-MM-dd", "dd-MM-yyyy")}"
+            .selectedForecast.day.condition.icon}").into(iv_condition)
+
+        tv_day.text = getString(R.string.day,
+            viewModel.selectedForecast.date.changeDateFormat("yyyy-MM-dd", "dd-MM-yyyy")
+                .getDayFromDate("dd-MM-yyyy"),
+                viewModel.selectedForecast.date.changeDateFormat("yyyy-MM-dd", "dd-MM-yyyy"))
     }
 
 }

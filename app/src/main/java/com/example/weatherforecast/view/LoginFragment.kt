@@ -56,26 +56,14 @@ class LoginFragment: Fragment() {
             val email = et_login_email.text.toString().trim()
             val password = et_login_password.text.toString().trim()
 
-            if (email.isNotEmpty() && password.isNotEmpty()) {
+            val imm = (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE)
+                    as InputMethodManager
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
 
-                if (email.isValidEmail()) {
-                    val imm =
-                        (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
-                    mainViewModel.mainScope.launch { pb_fetch_forecast.visibility = View.VISIBLE }
-                    val loginResponse = mainViewModel.authenticateUser(email, password)
+            mainViewModel.mainScope.launch { pb_fetch_forecast.visibility = View.VISIBLE }
+            val loginResponse = mainViewModel.authenticateUser(email, password)
 
-                    processResponse(loginResponse)
-                } else {
-                    mainViewModel.mainScope.launch {
-                        Toast.makeText(activity as MainActivity, "Invalid email format.", Toast.LENGTH_LONG).show()
-                    }
-                }
-            } else {
-                mainViewModel.mainScope.launch {
-                    Toast.makeText(activity as MainActivity, "All fields are mandatory.", Toast.LENGTH_LONG).show()
-                }
-            }
+            processResponse(loginResponse)
         }
     }
 

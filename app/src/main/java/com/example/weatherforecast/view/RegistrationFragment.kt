@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.weatherforecast.R
+import com.example.weatherforecast.model.RegistrationResponse
 import com.example.weatherforecast.utils.isValidEmail
 import com.example.weatherforecast.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.custom_progressbar.*
@@ -49,27 +50,20 @@ class RegistrationFragment: Fragment() {
         val name = et_register_name.text.toString().trim()
         val email = et_register_email.text.toString().trim()
         val password = et_register_password.text.toString().trim()
-        if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-            if (email.isValidEmail()) {
-                val imm =
-                    (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
-                pb_fetch_forecast.visibility = View.VISIBLE
-                mainViewModel.backgroundScope.launch {
-                    withContext(Dispatchers.Default) {
-                        mainViewModel.registerUser(email, password, name)
-                    }
-                    mainViewModel.mainScope.launch {
-                        pb_fetch_forecast.visibility = View.GONE
-                        (activity as MainActivity).supportFragmentManager.popBackStack()
-                    }
-                }
-            } else {
-                Toast.makeText(activity as MainActivity, "Invalid email format.", Toast.LENGTH_LONG).show()
+        val imm = (activity as MainActivity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+        pb_fetch_forecast.visibility = View.VISIBLE
+        mainViewModel.backgroundScope.launch {
+            withContext(Dispatchers.Default) {
+                mainViewModel.registerUser(email, password, name)
             }
-
-        } else {
-            Toast.makeText(activity, "All fields are mandatory.", Toast.LENGTH_LONG).show()
+            mainViewModel.mainScope.launch {
+                Toast.makeText(activity as MainActivity, mainViewModel.registrationStatus.msg, Toast.LENGTH_SHORT).show()
+                pb_fetch_forecast.visibility = View.GONE
+                if (mainViewModel.registrationStatus == RegistrationResponse.SUCCESS) {
+                    (activity as MainActivity).supportFragmentManager.popBackStack()
+                }
+            }
         }
     }
 }
