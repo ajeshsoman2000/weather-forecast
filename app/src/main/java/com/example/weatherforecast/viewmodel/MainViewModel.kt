@@ -33,6 +33,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private val weatherRepository = WeatherRepository()
     lateinit var registrationStatus: RegistrationResponse
                 private set
+    val weatherForecastlist = ArrayList<Forecast>()
+
     fun getWeatherForecast(): LiveData<WeatherResponse> {
         return weatherDetail
     }
@@ -41,12 +43,22 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         if ((getApplication() as Application).applicationContext.isNetworkConnectionAvailable()) {
             if (city.isNotEmpty()) {
                 weatherResponse = weatherRepository.getWeatherForecast(city)
+                if (weatherResponse is WeatherResponse.Success) {
+                    weatherForecastlist.clear()
+                    weatherForecastlist.addAll((weatherResponse as WeatherResponse.Success)
+                        .result.forecast.forecastday)
+                } else {
+                    weatherForecastlist.clear()
+                }
+
                 weatherDetail.postValue(weatherResponse)
             } else {
+                weatherForecastlist.clear()
                 weatherDetail.postValue(WeatherResponse.Error(
                     (getApplication() as Application).applicationContext.getString(R.string.err_no_city_entered)))
             }
         } else {
+            weatherForecastlist.clear()
             weatherDetail.postValue(WeatherResponse.Error((getApplication() as Application).
                 applicationContext.getString(R.string.err_no_connectivity)))
         }

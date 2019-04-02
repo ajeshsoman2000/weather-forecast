@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherforecast.R
+import com.example.weatherforecast.model.Forecast
 import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.repository.database.userdetail.UserDetailEntity
 import com.example.weatherforecast.utils.isNetworkConnectionAvailable
@@ -29,9 +30,23 @@ import kotlinx.android.synthetic.main.custom_progressbar.*
 
 class ForecastListFragment: Fragment() {
 
-    private var weatherDetail: LiveData<WeatherResponse>? = null
     lateinit var mainViewModel: MainViewModel
     private val TAG = "ForecastListFragment"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mainViewModel = ViewModelProviders.of(activity as MainActivity).get(MainViewModel::class.java)
+        if (mainViewModel.loggedInUser != null) {
+            (activity as MainActivity).supportActionBar?.title =
+                "Welcome ${(mainViewModel.loggedInUser as UserDetailEntity).name}"
+        }
+    }
+
+    override fun onDestroy() {
+        (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
+        super.onDestroy()
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_forecast_list, container, false)
@@ -39,16 +54,11 @@ class ForecastListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel = ViewModelProviders.of(activity as MainActivity).get(MainViewModel::class.java)
-
-        if (mainViewModel.loggedInUser != null && savedInstanceState != null) {
-            Toast.makeText(activity as MainActivity, "Welcome ${(mainViewModel.loggedInUser as UserDetailEntity).name}.", Toast.LENGTH_LONG).show()
-        }
-
         rv_weather_forecast.layoutManager = LinearLayoutManager(activity)
         rv_weather_forecast.itemAnimator = DefaultItemAnimator()
 
-        weatherDetail = mainViewModel.getWeatherForecast()
+        rv_weather_forecast.adapter = WeatherForecastRecyclerViewAdapter(activity as MainActivity,
+            mainViewModel.weatherForecastlist)
 
         setObserver()
 
@@ -64,23 +74,16 @@ class ForecastListFragment: Fragment() {
     }
 
     private fun setObserver(){
-        (weatherDetail as LiveData<WeatherResponse>).observe(activity as MainActivity,
+        mainViewModel.getWeatherForecast().observe(activity as MainActivity,
             Observer<WeatherResponse> { t ->
                 if (t is WeatherResponse.Success) {
                     tv_placeholder.visibility = View.GONE
-                    rv_weather_forecast.adapter =
-                        WeatherForecastRecyclerViewAdapter(
-                            activity as MainActivity,
-                            t.result.forecast.forecastday
-                        )
+                    rv_weather_forecast.adapter?.notifyDataSetChanged()
                 } else {
                     tv_placeholder.visibility = View.VISIBLE
-                    Toast.makeText(activity as MainActivity, (t as WeatherResponse.Error).message, Toast.LENGTH_SHORT).show()
-                    rv_weather_forecast.adapter =
-                        WeatherForecastRecyclerViewAdapter(
-                            activity as MainActivity,
-                            null
-                        )
+                    Toast.makeText(activity as MainActivity, (t as WeatherResponse.Error).message,
+                        Toast.LENGTH_SHORT).show()
+                    rv_weather_forecast.adapter?.notifyDataSetChanged()
                 }
             })
     }
