@@ -2,8 +2,11 @@ package com.example.weatherforecast
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.example.weatherforecast.model.WeatherModel
 import com.example.weatherforecast.model.WeatherResponse
 import com.example.weatherforecast.viewmodel.MainViewModel
+import com.google.gson.Gson
 import kotlinx.coroutines.*
 import org.junit.Assert
 import org.junit.Before
@@ -43,7 +46,8 @@ class MainViewModelUnitTest {
 
     @Test
     fun getForecast_withCity() {
-        val mockSuccessResponse = Mockito.mock(WeatherResponse.Success::class.java)
+        val dummyResponse = Gson().fromJson<WeatherModel>(weatherSuccess, WeatherModel::class.java)
+        val mockSuccessResponse = WeatherResponse.Success(dummyResponse)
         val mockLivedataResponse = MutableLiveData<WeatherResponse>()
         mockLivedataResponse.postValue(mockSuccessResponse)
         runBlocking {
@@ -52,5 +56,12 @@ class MainViewModelUnitTest {
         }
         val actualResponse = mockViewModel.getWeatherForecast()
         Assert.assertEquals(mockSuccessResponse, actualResponse.value)
+
+        val observer = Observer<WeatherResponse> {
+            Assert.assertEquals(mockSuccessResponse, it)
+        }
+
+        mockViewModel.getWeatherForecast().observeForever(observer)
     }
+
 }
