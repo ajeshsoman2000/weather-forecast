@@ -1,4 +1,4 @@
-package com.example.weatherforecast
+package com.example.weatherforecast.utils
 
 import com.example.weatherforecast.utils.changeDateFormat
 import com.example.weatherforecast.utils.getDayFromDate
